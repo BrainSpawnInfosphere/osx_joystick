@@ -14,6 +14,10 @@ it with the PS3 controller.
 
 ### Homebrew Dependencies
 
+Follow the [instructions](http://ros.org/doc/api/rosdep2/html/contributing_rules.html) to
+setup rosdep correctly. If you don't want to do that, then uncomment rosdep glfw in 
+manifest.xml. Then just add the homebrew library as normal.
+
 The required [Homebrew](http://mxcl.github.com/homebrew/) formula for OSX can be 
 installed using:
 
@@ -64,12 +68,22 @@ com.apple.Bluetooth.plist
 
 The node publishes a standard [joystick message](http://www.ros.org/doc/api/sensor_msgs/html/msg/Joy.html)
 
+## Axes
+
+![axes](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_buttons.jpg)
+
+## Buttons
+
+![buttons](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_buttons_front.jpg)
+
+![buttons](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_axes.jpg)
+
 ## ToDo
 
  * document what buttons are what
  * document the axes
  * grab PS3 pictures from the linux package
- * see if the Wii works :)
+ * see if the Wii works :) -- doesn't see to work
  * need to double check the license is compatible with BSD 
 
 

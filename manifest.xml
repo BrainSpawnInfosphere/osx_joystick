@@ -10,6 +10,8 @@
   <url>http://github.com/walchko/osx_joystick</url>
   <depend package="roscpp"/>
   <depend package="sensor_msgs"/>
+  <depend package="geometry_msgs"/>
+  <rosdep name="glfw" />
 
 </package>
 

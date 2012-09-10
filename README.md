@@ -8,10 +8,10 @@
 
 **Website:** http://github.com/walchko/osx_joystick
 
-The standard Linux PS3 joystick drivers do not work on OSX. This package leverages 
-[GLFW](http://www.glfw.org) to read joysticks under OS X. I currently have only tested 
-it with the [PS3 DualShock3](http://en.wikipedia.org/wiki/DualShock_3#DualShock_3) 
-controller.
+The standard [Linux PS3 joystick](http://ros.org/wiki/joystick_drivers) drivers do not 
+work on OSX. This package leverages [GLFW](http://www.glfw.org) to read joysticks under 
+OS X. I currently have only tested it with the 
+[PS3 DualShock3](http://en.wikipedia.org/wiki/DualShock_3#DualShock_3) controller.
 
 To my knowledge, there is no way to use GLFW to read the gyros and accelerometers 
 in the controller. However, I will keep looking. Also, this doesn't seem to work with 
@@ -90,7 +90,7 @@ The node publishes a standard [joystick message](http://www.ros.org/doc/api/sens
 
 ![axes](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_axes.jpg)
 
-**Note:** The signs of the 0 and 3 axes are backwards, meaning positive is really 
+**Note:** The signs of the 0 and 2 axes are backwards, meaning positive is really 
 negative for those two axes.
 
 ## Twist Joystick
@@ -124,6 +124,6 @@ The node publishes a standard [twist message](http://ros.org/doc/api/geometry_ms
 
 ## ToDo
 
- * nothing right now
+ * finish the twist node
 
 

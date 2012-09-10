@@ -10,7 +10,14 @@
 
 The standard Linux PS3 joystick drivers do not work on OSX. This package leverages 
 [GLFW](http://www.glfw.org) to read joysticks under OS X. I currently have only tested 
-it with the PS3 controller.
+it with the [PS3 DualShock3](http://en.wikipedia.org/wiki/DualShock_3#DualShock_3) 
+controller.
+
+To my knowledge, there is no way to use GLFW to read the gyros and accelerometers 
+in the controller. However, I will keep looking. Also, this doesn't seem to work with 
+Nintendo's [Wiimote](http://en.wikipedia.org/wiki/Wiimote) either.
+
+## Setup
 
 ### Homebrew Dependencies
 
@@ -75,31 +82,24 @@ The node publishes a standard [joystick message](http://www.ros.org/doc/api/sens
 
 ### Buttons
 
-![axes](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_buttons.jpg)
+![buttons](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_buttons.jpg)
 
 ![buttons](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_buttons_front.jpg)
 
-0. h
-1. h
-2. h
-3. h
-4. h
-5. h
-6. h
-7. h
-8. h
-9. h
-10. h
-11. h
-12. h
-13. h
-
-
 ### Axes
 
-![buttons](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_axes.jpg)
+![axes](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_axes.jpg)
+
+**Note:** The signs of the 0 and 3 axes are backwards, meaning positive is really 
+negative for those two axes.
 
 ## Twist Joystick
+
+The twist joystick is just a simple node that directly produces twist messages to make
+it easier to drive a robot (i.e., teleop) with little effort. The left axes (0 and 1)
+send the linear part of the message. The right axes (2 and 3) handle the twist (i.e.,
+heading) of the robot. The buttons do nothing. For a more involved controller, you should
+write your own robot specific node.
 
 ### Command Line
 
@@ -124,10 +124,6 @@ The node publishes a standard [twist message](http://ros.org/doc/api/geometry_ms
 
 ## ToDo
 
- * document what buttons are what
- * document the axes
- * grab PS3 pictures from the linux package
- * see if the Wii works :) -- doesn't see to work
- * need to double check the license is compatible with BSD 
+ * nothing right now
 
 

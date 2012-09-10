@@ -100,7 +100,7 @@ public:
         joy_pub = n.advertise<sensor_msgs::Joy>(joy_name, 50);
         
         
-        ROS_INFO("joystick");
+        //ROS_INFO("joystick");
     }
     
     // grab the current axes and button values
@@ -196,22 +196,21 @@ public:
         sprintf(joy_name, "cmd%d",joy_num);
         twist_pub = n.advertise<geometry_msgs::Twist>(joy_name, 50);
         
-        ROS_INFO("twist");
+        //ROS_INFO("twist");
     }
     
     virtual void publishMessage(void){
         
         // publish joystick message
         geometry_msgs::Twist msg;
-        //msg.header.stamp = ros::Time::now();
         
-        // copy axes
-        //joy_msg.axes.resize(num_axes);
-        //for(int i=0;i<num_axes;++i) joy_msg.axes[i] = a[i];
+        msg.linear.x = a[1];
+        msg.linear.y = a[0];
+        msg.linear.z = 0.0;
         
-        // copy buttons
-        //joy_msg.buttons.resize(num_buttons);
-        //for(int i=0;i<num_buttons;++i) joy_msg.buttons[i] = b[i];
+        msg.angular.x = 0.0;
+        msg.angular.y = a[3]; // pitch
+        msg.angular.z = a[2]; // yaw
         
         twist_pub.publish(msg);
     }

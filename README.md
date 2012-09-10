@@ -73,7 +73,7 @@ com.apple.Bluetooth.plist
     rosrun osx_joystick joystick --num 3 --hz 50
 
 This grabs the 4th joystick (remember n-1) and the node sends joy messages at 50 Hz
-on the topic cmd3.
+on the topic joy3.
 
 ### Published Topics: 
 **joy[0-15]:** 
@@ -124,6 +124,6 @@ The node publishes a standard [twist message](http://ros.org/doc/api/geometry_ms
 
 ## ToDo
 
- * finish the twist node
+ * done
 
 

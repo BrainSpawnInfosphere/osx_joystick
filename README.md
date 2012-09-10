@@ -24,7 +24,7 @@ installed using:
     brew update
     brew install glfw
     
-## Bluetooth PS3 Controller Setup
+### Bluetooth PS3 Controller Setup
 
 These instructions are a modification of those found at [here](http://thp.io/2010/psmove/)
 
@@ -51,24 +51,29 @@ to see if these work**):
 * Convert it back to binary Plist format using: plutil -convert binary1 
 com.apple.Bluetooth.plist
 
-## Command Line
+## Joystick 
+
+### Command Line
 
 	rosrun osx_joystick joystick --num --hz --help
 
- * help Prints the help message	
- * num The number of the joystick to connect too
- * hz The refresh rate to poll the joystick at (default: 30 Hz)
+ - help Prints the help message	
+ - num The number of the joystick to connect too
+ - hz The refresh rate to poll the joystick at (default: 30 Hz)
 	
 ### Example:
 
     rosrun osx_joystick joystick --num 3 --hz 50
 
-## Published Topics: 
+This grabs the 4th joystick (remember n-1) and the node sends joy messages at 50 Hz
+on the topic cmd3.
+
+### Published Topics: 
 **joy[0-15]:** 
 
 The node publishes a standard [joystick message](http://www.ros.org/doc/api/sensor_msgs/html/msg/Joy.html)
 
-## Buttons
+### Buttons
 
 ![axes](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_buttons.jpg)
 
@@ -78,10 +83,44 @@ The node publishes a standard [joystick message](http://www.ros.org/doc/api/sens
 1. h
 2. h
 3. h
+4. h
+5. h
+6. h
+7. h
+8. h
+9. h
+10. h
+11. h
+12. h
+13. h
 
-## Axes
+
+### Axes
 
 ![buttons](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_axes.jpg)
+
+## Twist Joystick
+
+### Command Line
+
+	rosrun osx_joystick twist_js --num --hz --help
+
+ - help Prints the help message	
+ - num The number of the joystick to connect too
+ - hz The refresh rate to poll the joystick at (default: 30 Hz)
+	
+### Example:
+
+    rosrun osx_joystick twist_js --num 3 --hz 50
+
+This grabs the 4th joystick (remember n-1) and the node sends twist messages at 50 Hz
+on the topic cmd3.
+    
+
+### Published Topics: 
+**cmd[0-15]:** 
+
+The node publishes a standard [twist message](http://ros.org/doc/api/geometry_msgs/html/msg/Twist.html)
 
 ## ToDo
 

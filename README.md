@@ -68,13 +68,18 @@ com.apple.Bluetooth.plist
 
 The node publishes a standard [joystick message](http://www.ros.org/doc/api/sensor_msgs/html/msg/Joy.html)
 
-## Axes
+## Buttons
 
 ![axes](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_buttons.jpg)
 
-## Buttons
-
 ![buttons](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_buttons_front.jpg)
+
+0. h
+1. h
+2. h
+3. h
+
+## Axes
 
 ![buttons](http://i1268.photobucket.com/albums/jj568/mars_university/ps3_axes.jpg)
 

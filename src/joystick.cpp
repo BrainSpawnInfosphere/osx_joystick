@@ -75,7 +75,6 @@ int main(int argc, char *argv[]){
         ("help", "produce help message")
         ("num", po::value<int>(),"which joystick to use, default is 0")
         ("hz", po::value<float>(), "polling frequency in Hz, default is 30 Hz")
-        ("twist", "publish Twist message, default is false")
         ;
     po::variables_map vm;       
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -94,11 +93,6 @@ int main(int argc, char *argv[]){
     
     if (vm.count("hz")){
         hz = vm["hz"].as<float>();
-    }
-    
-    if (vm.count("twist")){
-        //hz = vm["hz"].as<float>();
-        ROS_INFO("Twist not enabled yet");
     }
 	
 	// init the GLFW library

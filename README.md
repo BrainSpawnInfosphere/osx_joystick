@@ -49,7 +49,7 @@ wheel (you can do this using chown root:wheel com.apple.Bluetooth.plist)
 5. Switch on Bluetooth, and press the PS button on the controller - it should now pair 
 without asking for a PIN
 
-[plist editor](http://i1268.photobucket.com/albums/jj568/mars_university/bluetoothplist.png)
+![plist editor](http://i1268.photobucket.com/albums/jj568/mars_university/bluetoothplist.png)
 
 Now if you don't have XCode installed for some strange reason or need to do this all on
 the command line, substitute these for the appropriate steps (**Note I have not checked

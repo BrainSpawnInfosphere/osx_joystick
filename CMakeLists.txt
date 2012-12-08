@@ -1,42 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(osx_joystick)
-#include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
-#include($ENV{ROS_ROOT}/core/rosbuild/FindPkgConfig.cmake)
-
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
-
-#rosbuild_init()
-
-#set the default path for built executables to the "bin" directory
-#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-#set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
-
-#common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
-
-#rosbuild_add_boost_directories()
-
-
 
 find_package(catkin REQUIRED COMPONENTS roscpp)
 
+find_package(PkgConfig)
 find_package(Boost REQUIRED COMPONENTS program_options)
 include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
@@ -50,7 +17,6 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
 
 ################ GLFW ##############################
-find_package(PkgConfig)
 pkg_check_modules(GLFW REQUIRED libglfw)
 if(GLFW_FOUND)
 	message("======== FOUND GLFW ${GLFW_VERSION} =============")
@@ -72,5 +38,5 @@ add_executable(twist_js src/twist_js.cpp)
 target_link_libraries(twist_js ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${GLFW_LIBRARIES})
 
 
-message("=  ${CATKIN_PACKAGE_BIN_DESTINATION} =")
-install(TARGETS joystick RUNTIME DESTINATION bin)
+#message("=  ${CATKIN_PACKAGE_BIN_DESTINATION} =")
+install(TARGETS joystick twist_js RUNTIME DESTINATION bin)

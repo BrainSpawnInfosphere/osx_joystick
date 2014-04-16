@@ -10,7 +10,7 @@ pkg_check_modules(GLFW libglfw)
 
 catkin_package()
 
-include_directories(${GLFW_INCLUDE_DIRS})
+include_directories(${catkin_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS})
 
 add_executable(joystick src/joystick.cpp)
 target_link_libraries(joystick ${catkin_LIBRARIES} ${GLFW_LIBRARIES} ${Boost_LIBRARIES})

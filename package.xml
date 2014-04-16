@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>osx_joystick</name>
+  <version>0.0.0</version>
+  <description>The osx_joystick2 package</description>
+
+  <maintainer email="unknown@unknown.com">Kelvin Walchko</maintainer>
+
+  <license>BSD</license>
+  <url type="website">http://github.com/hgaiser/osx_joystick</url>
+  <author email="unknown@unknown.com">Kelvin Walchko</author>
+  <author email="hansg91@gmail.com">Hans Gaiser</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+</package>

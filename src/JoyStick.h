@@ -90,7 +90,7 @@ public:
         
         // resize message fields here once
         joy_msg.axes.resize(num_axes);
-        joy_msg.buttons.resize(num_buttons);
+        joy_msg.buttons.resize(num_buttons+1); // hat is last
         
         SDL_JoystickClose(joystick);
         
@@ -132,10 +132,22 @@ public:
         joy_msg.header.stamp = ros::Time::now();
         
         // copy axes
-        for(int i=0;i<num_axes;++i) joy_msg.axes[i] = SDL_JoystickGetAxis(joystick,i);
+        for(int i=0;i<3;++i) joy_msg.axes[i] = SDL_JoystickGetAxis(joystick,i);
+        
+        // PS4 controller correction
+        // for some strange reason, the right js axis isn't with the others, so 
+        // I will move them around so left js is 0,1 and right js is 2,3
+        joy_msg.axes[3] = SDL_JoystickGetAxis(joystick,5); // right js y-axis
+        joy_msg.axes[4] = SDL_JoystickGetAxis(joystick,3); // left trigger
+        joy_msg.axes[5] = SDL_JoystickGetAxis(joystick,4); // right trigger
         
         // copy buttons
         for(int i=0;i<num_buttons;++i) joy_msg.buttons[i] = SDL_JoystickGetButton(joystick,i);
+        
+        // ROS doesn't support hat buttons (per say) in their messages, so I am 
+        // adding an extra button to account for it
+        joy_msg.buttons[14] = SDL_JoystickGetHat(joystick,0);
+        
         
         SDL_JoystickClose(joystick);
 	}
@@ -168,7 +180,6 @@ public:
     }
     
     virtual void setUpPublisher(void){
-        //ros::NodeHandle n("~");
         ros::NodeHandle n;
         char joy_name[32];
         sprintf(joy_name, "joy%d",joy_num);

@@ -36,6 +36,9 @@ if(SDL_FOUND)
 endif(SDL_FOUND)
 
 ################ JoyStick ##############################
+add_executable(joystick_window src/ps4.cpp)
+target_link_libraries(joystick_window ${catkin_LIBRARIES} curses)
+
 add_executable(${PROJECT_NAME} src/joystick.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${SDL_LIBRARIES})
 

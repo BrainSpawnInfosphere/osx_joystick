@@ -37,6 +37,7 @@
  *
  * Change Log:
  *  9 Sep 2012 Created
+ *  5 Jul 2014 Changed to SDL to support PS4 controller
  *
  **********************************************************************
  *
@@ -48,13 +49,10 @@
 #define __JOY_STICK_H__
 
 //--- C++ ---------------------
-#include <math.h>
-#include <stdlib.h> // ?
-#include <stdio.h>  // ?
 #include <string.h>
 
-//--- GLFW --------------------
-#include <GL/glfw.h>
+//--- SDL2 --------------------
+#include <SDL.h>
 
 //--- ROS ---------------------
 #include <ros/ros.h>
@@ -62,23 +60,21 @@
 #include <geometry_msgs/Twist.h> // twist to command robot
 
 /**
- * JoyStick uses GLFW library to read any joystick connected to the system.
- * The joysticks are numbered from GLFW_JOYSTICK_1 (or 0) to GLFW_JOYSTICK_LAST
- * (or 16). The class defaults to the first one (0).
+ * Simple joystick driver using SDL. It is primarily geared towards the PS4 controller.
  */
 class JoyStick {
 public:
-    JoyStick(int i=GLFW_JOYSTICK_1){
+    JoyStick(int i=0){
         joy_num = i;
-        int err = glfwGetJoystickParam(joy_num,GLFW_PRESENT);
+        joystick = SDL_JoystickOpen(joy_num);
         
-        if(err == GL_FALSE){
+        if(joystick == NULL){
             ROS_ERROR("Couldn't connect to joystick[%i]",joy_num);
             exit(1);
         }
         
-        num_axes = glfwGetJoystickParam(joy_num,GLFW_AXES);
-        num_buttons = glfwGetJoystickParam(joy_num,GLFW_BUTTONS);
+        num_axes = SDL_JoystickNumAxes(joystick);
+        num_buttons = SDL_JoystickNumButtons(joystick);
         
         if(num_axes == 0 || num_buttons == 0){
             ROS_ERROR("axes[%i] buttons[%i]",num_axes,num_buttons);
@@ -87,8 +83,16 @@ public:
         }
         
         ROS_INFO("==================================");
-        ROS_INFO("Joystick%i: axes[%i] buttons[%i]",joy_num,num_axes,num_buttons);
+        ROS_INFO("Joystick has %d axes, %d hats, %d balls, and %d buttons",
+           SDL_JoystickNumAxes(joystick), SDL_JoystickNumHats(joystick),
+           SDL_JoystickNumBalls(joystick), SDL_JoystickNumButtons(joystick));
         ROS_INFO("==================================");
+        
+        // resize message fields here once
+        joy_msg.axes.resize(num_axes);
+        joy_msg.buttons.resize(num_buttons);
+        
+        SDL_JoystickClose(joystick);
         
     }
     
@@ -98,29 +102,6 @@ public:
         char joy_name[32];
         sprintf(joy_name, "joy%d",joy_num);
         joy_pub = n.advertise<sensor_msgs::Joy>(joy_name, 50);
-        
-        
-        //ROS_INFO("joystick");
-    }
-    
-    // grab the current axes and button values
-    bool get(void){
-        int err = 0;
-        //ROS_INFO("loop");
-        
-        err = glfwGetJoystickPos(joy_num, a, num_axes );
-        if(err == 0 || err < num_axes){
-            ROS_ERROR_THROTTLE(1.0,"Couldn't read axes");
-            return false;
-        }
-        
-        err = glfwGetJoystickButtons(joy_num, b, num_buttons);
-        if(err == 0 || err < num_buttons){
-            ROS_ERROR_THROTTLE(1.0,"Couldn't read buttons");
-            return false;
-        }
-        
-        return true;
     }
     
     // main loop
@@ -130,17 +111,8 @@ public:
 
         // Main Loop -- go until ^C terminates
         while (ros::ok()){
-            bool ok = get();
             
-            // if we get enough errors, then exit
-            if(!ok){ 
-                ++err_cnt;
-                if(err_cnt > hz*5){
-                    ROS_ERROR("Can't connect to joystick[%i] ... exiting",joy_num);
-                    return;
-                }
-            }
-            
+            get();
             publishMessage();
 
             ros::spinOnce();
@@ -148,19 +120,27 @@ public:
         }
 	}
 	
-	virtual void publishMessage(void){
+	void mapAxesAndButtons(){
+		;
+	}
+	
+	virtual void get(void){
+	
+        joystick = SDL_JoystickOpen(joy_num);
         
         // publish joystick message
-        sensor_msgs::Joy joy_msg;
         joy_msg.header.stamp = ros::Time::now();
         
         // copy axes
-        joy_msg.axes.resize(num_axes);
-        for(int i=0;i<num_axes;++i) joy_msg.axes[i] = a[i];
+        for(int i=0;i<num_axes;++i) joy_msg.axes[i] = SDL_JoystickGetAxis(joystick,i);
         
         // copy buttons
-        joy_msg.buttons.resize(num_buttons);
-        for(int i=0;i<num_buttons;++i) joy_msg.buttons[i] = b[i];
+        for(int i=0;i<num_buttons;++i) joy_msg.buttons[i] = SDL_JoystickGetButton(joystick,i);
+        
+        SDL_JoystickClose(joystick);
+	}
+	
+	virtual void publishMessage(void){
         
         joy_pub.publish(joy_msg);
     }
@@ -169,12 +149,10 @@ protected:
     int joy_num;    // what joystick
     int num_axes;   // how many axes
     int num_buttons; // how many buttons
-    float a[32];    // tmp storage
-    unsigned char b[32]; // tmp storage
+    SDL_Joystick *joystick;
     
-    //sensor_msgs::Joy joy_msg; // should i keep this?
+    sensor_msgs::Joy joy_msg; 
 	ros::Publisher joy_pub;
-	ros::Publisher twist_pub;
 };
 
 
@@ -185,7 +163,7 @@ protected:
 class TwistJoyStick : public JoyStick {
 public:
 
-    TwistJoyStick(int i=GLFW_JOYSTICK_1) : JoyStick(i){
+    TwistJoyStick(int i=0) : JoyStick(i){
         ;
     }
     
@@ -193,7 +171,7 @@ public:
         //ros::NodeHandle n("~");
         ros::NodeHandle n;
         char joy_name[32];
-        sprintf(joy_name, "cmd%d",joy_num);
+        sprintf(joy_name, "joy%d",joy_num);
         twist_pub = n.advertise<geometry_msgs::Twist>(joy_name, 50);
         
         //ROS_INFO("twist");
@@ -204,17 +182,19 @@ public:
         // publish joystick message
         geometry_msgs::Twist msg;
         
-        msg.linear.x = a[1];
-        msg.linear.y = a[0];
+        msg.linear.x = joy_msg.axes[1];
+        msg.linear.y = joy_msg.axes[0];
         msg.linear.z = 0.0;
         
         msg.angular.x = 0.0;
-        msg.angular.y = a[3]; // pitch
-        msg.angular.z = a[2]; // yaw
+        msg.angular.y = joy_msg.axes[3]; // pitch
+        msg.angular.z = joy_msg.axes[2]; // yaw
         
         twist_pub.publish(msg);
     }
-
+    
+protected:
+	ros::Publisher twist_pub;
 };
 
 #endif

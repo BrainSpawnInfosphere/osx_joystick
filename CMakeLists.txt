@@ -1,51 +1,63 @@
-cmake_minimum_required(VERSION 2.8)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
-include($ENV{ROS_ROOT}/core/rosbuild/FindPkgConfig.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(osx_joystick)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+find_package(catkin REQUIRED COMPONENTS roscpp)
 
-rosbuild_init()
+find_package(PkgConfig)
+find_package(Boost REQUIRED COMPONENTS program_options)
+include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+## Generate messages in the 'msg' folder
+# add_message_files(
+#   DIRECTORY msg
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
-#uncomment if you have defined messages
-#rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
 
-#common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
+## Declare things to be passed to other projects
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs
+  DEPENDS Boost # other-3rd-party-libraries
+)
 
-rosbuild_add_boost_directories()
+## Specify additional locations of header files
+include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-################ GLFW ##############################
-pkg_check_modules(GLFW REQUIRED libglfw)
-if(GLFW_FOUND)
-	message("======== FOUND GLFW ${GLFW_VERSION} =============")
-	include_directories(${GLFW_INCLUDE_DIRS})
-endif(GLFW_FOUND)
+
+################ SDL2 ##############################
+pkg_check_modules(SDL REQUIRED sdl2)
+if(SDL_FOUND)
+	message("======== FOUND SDL ${SDL_VERSION} =============")
+	include_directories(${SDL_INCLUDE_DIRS})
+endif(SDL_FOUND)
 
 ################ JoyStick ##############################
-rosbuild_add_executable(joystick src/joystick.cpp)
-rosbuild_link_boost(joystick program_options)
-set(CMAKE_EXE_LINKER_FLAGS "-framework Cocoa -framework OpenGL -framework IOKit -lglfw" )
+add_executable(${PROJECT_NAME} src/joystick.cpp)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${SDL_LIBRARIES})
+
+
 
 ################ TwistJoyStick ########################
-rosbuild_add_executable(twist_js src/twist_js.cpp)
-rosbuild_link_boost(twist_js program_options)
-set(CMAKE_EXE_LINKER_FLAGS "-framework Cocoa -framework OpenGL -framework IOKit -lglfw" )
+#rosbuild_add_executable(twist_js src/twist_js.cpp)
+#rosbuild_link_boost(twist_js program_options)
+#set(CMAKE_EXE_LINKER_FLAGS "-framework Cocoa -framework OpenGL -framework IOKit -lglfw" )
 
+add_executable(osx_twist_js src/twist_js.cpp)
+target_link_libraries(osx_twist_js ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${SDL_LIBRARIES})
+
+
+message("=  ${CATKIN_PACKAGE_BIN_DESTINATION} =")
+install(TARGETS ${PROJECT_NAME} osx_twist_js RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+#install(TARGETS ${PROJECT_NAME} osx_twist_js RUNTIME DESTINATION "/Users/kevin/catkin/install")
+
+
+## Mark executables and/or libraries for installation
+# install(TARGETS ${PROJECT_NAME}
+#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )

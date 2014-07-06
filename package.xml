@@ -1,0 +1,33 @@
+<package>
+  <name>osx_joystick</name>
+  <version>0.0.0</version>
+  <description>
+
+     Joystick driver for OSX.
+
+  </description>
+  <author>Kevin Walchko</author>
+  <maintainer email="kevin@todo.todo">kevin</maintainer>
+  <license>BSD</license>
+  
+  <url>http://github.com/walchko/osx_joystick</url>
+  
+  <export>
+    <rosdoc config="rosdoc.yaml" />
+  </export>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>glfw</build_depend>
+  
+  
+  <run_depend>roscpp</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>glfw</run_depend>
+
+</package>
+
+

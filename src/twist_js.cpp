@@ -37,6 +37,7 @@
  *
  * Change Log:
  *  9 Sep 2012 Created
+ *  5 Jul 2014 Changed to SDL to support PS4 controller
  *
  **********************************************************************
  *
@@ -45,9 +46,6 @@
  */
 
 //--- C++ ---------------------
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 //--- Boost --------------------
@@ -81,8 +79,6 @@ int main(int argc, char *argv[]){
     po::notify(vm);   
     
     if (vm.count("help")) {
-        //std::cout << "rosrun ahrs ahrs [option] \n";
-        //std::cout << "    default topic in [imu] out [imu_out] \n";
         std::cout << desc << "\n";
         return 0;
     }
@@ -95,19 +91,21 @@ int main(int argc, char *argv[]){
         hz = vm["hz"].as<float>();
     }
 	
-	// init the GLFW library
-    if( !glfwInit() ){
-        ROS_ERROR("Failed to initialize GLFW" );
+	// init the SDL2 library
+    // Initialize SDL (Note: video is required to start event loop) 
+    if (SDL_Init(SDL_INIT_JOYSTICK) < 0) {
+        ROS_ERROR("[-] Failed to initialize SDL2: %s", SDL_GetError());
         exit(1);
     }
+    
     //-------------------------------------------------------------------------------
     
     TwistJoyStick js(joy_num);
     js.setUpPublisher();
     js.spin(hz);
-
-    // Terminate GLFW
-    glfwTerminate();
+    
+    // Shut things down
+    SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 
     // Exit program
     exit(0);

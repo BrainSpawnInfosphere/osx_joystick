@@ -9,7 +9,7 @@
   <license>BSD</license>
   <url type="website">http://github.com/hgaiser/osx_joystick</url>
   <author email="unknown@unknown.com">Kelvin Walchko</author>
-  <author email="hansg91@gmail.com">Hans Gaiser</author>
+  <author email="unknown@unknown.com">Hans Gaiser</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>
